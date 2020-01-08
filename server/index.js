@@ -25,42 +25,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/yelp', (req, res) => {
-  // const { city, state, country } = placeDetails;
-
-  // queries.forEach((element, i) => {
-  //   let urlMatch = `https://api.yelp.com/v3/businesses/matches?name=${allPlaces[i].name}&address1=${allPlaces[i].address}&city=${city}&state=${state}&country=${country}`;
-  //   let request = {
-  //     method: 'GET',
-
-  //     headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
-  //   }
-  //   queries[i].yelp = { url: urlMatch, request }
-  
-  // });
-
-  
-
-// res.send('hiiii');
-  ///:address/:city/:state/:country
-
-  // let name = req.query.name.toLowerCase();
-  // let location = req.query.location;
-  // let city = req.query.city || 'Seattle';
-  // let state = req.query.state || 'WA';
-  // let country = req.query.country || 'US';
-  // console.log('req.query', req.query);
-  // let urlMatch = `https://api.yelp.com/v3/businesses/matches?name=${name}&address1=${location}&city=${city}&state=${state}&country=${country}`;
-  // //let urlLatLong = 'https://api.yelp.com/v3/autocomplete?text="dance&latitude=47.6062&longitude=-122.3321'
-  // let urlSearch = `https://api.yelp.com/v3/businesses/search?term=${name}&location=${city}%20${state}%20${location}&radius=200`
-  // let request = {
-  //   method: 'get',
-  //   url: urlMatch,
-  //   headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx"}
-  // }
 
   const displayLimit = req.body.displayLimit;
   const iterateApiCalls = (queries, index, yelpData ) => {
   
+    // SAME PHONE NUMBER ONE IS CLOSED !!!
+    // maybe iterate find not closed one then maybe algo that finds closes name based on query
+    // yelp:
+    // businesses: Array(2)
+    // 0: { id: "SQKRGzDa7qd8qHb13Z2-Hg", alias: "delinomore-seattle", name: "DeliNoMore", image_url: "https://s3-media0.fl.yelpcdn.com/bphoto/H1p6njRYuEULDluuwEbiNw/o.jpg", is_closed: false, … }
+    // 1: { id: "rkiqLiA9mvM-5ULFxx6TUg", alias: "nickos-seattle", name: "Nicko's", image_url: "https://s3-media0.fl.yelpcdn.com/bphoto/VXmkdiYR_zmdBDwVB3F7Gg/o.jpg", is_closed: true, … }
 
     if (index < displayLimit) {//NEED TO pass from display limit in LAYOUT COMPONENT!!!
       if (index === 0){
@@ -76,59 +50,14 @@ app.post('/api/yelp', (req, res) => {
         //  url: urlPhone,
         headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
       }
-    //  const name = queries[index].health.request
-      // const healthUrl = queries[index].health.url
-      // const yelpRequest = queries[index].yelp.request
-      // const yelpthUrl = queries[index].yelp.url
- 
+
       const apiEndpointToFetch = queries[i].phoneNumber != null ? yelpPhone : yelpBusiness;
       console.log("queriesqueries", queries);
-      //  debugger;
+
       apiEndpointToFetch();
-      // switch (endpoint) {
-      //   case 'phone':
-      //     request.url = urlPhone
-      //     urlMatch = urlPhone
-      //     break;
-      //   case 'business':
-      //     request.url = urlBusinesses
-      //     urlMatch = urlBusinesses
-      //     break;
-      
-      //   default:
-      //     break;
-      // }
-
-
-              // Promise.resolve(
-              //   apiRequest(urlMatch, request),
-          
-              // ).then((response) => {
-              //   return response.json()
-              // })
-              //   .then((data) => {
-              //     let yelpHealth = {
-              //       health: data
-                  
-              //     }
-              //     console.log('yelpHealthyelpHealthyelpHealth', yelpHealth);
-              //     yelpData.push(yelpHealth);
-              //     index = index + 1;
-              //     iterateApiCalls(queries, index, yelpData, "phone")
-              //   }).catch(e=>{
-              //     console.log('eeee', e);
-              //     let yelpHealth = {
-              //       health: null
-
-              //     }
-              //     index = index + 1;
-              //     yelpData.push(yelpHealth);
-              //     endpoint = endpoint === "business" ? "phone" : "business";
-              //     iterateApiCalls(queries, index, yelpData, endpoint)
-              //   })
     }
     else {
-    //  console.log('yelpData', yelpData );
+
       res.send(yelpData);
     }
 
@@ -158,8 +87,6 @@ app.post('/api/yelp', (req, res) => {
           }
        
         }).catch(e => {
-        //  console.log('eeee', e);
-
           yelpBusiness()
         })
 
@@ -248,11 +175,6 @@ app.post('/api/yelp', (req, res) => {
     return response;
   }
 
-
-
- // "content-type": 'application/json',  47.6062, -122.3321
-//Authorization
-  
   
 });
 
