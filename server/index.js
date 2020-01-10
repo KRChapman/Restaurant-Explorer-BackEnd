@@ -4,6 +4,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
+const { yelpApi} = require('./../api/yelp');
 const app = express();
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -24,7 +25,7 @@ app.get('/', (req, res) => {
  
 });
 
-app.post('/api/yelp', (req, res) => {
+app.post('/api/yelp', async (req, res) => {
  
   const displayLimit = req.body.displayLimit;
   const iterateApiCalls = (queries, index, yelpData ) => {
@@ -52,13 +53,14 @@ app.post('/api/yelp', (req, res) => {
       }
 
       const apiEndpointToFetch = queries[i].phoneNumber != null ? yelpPhone : yelpBusiness;
-      console.log("queriesqueries", queries);
+     // console.log("queriesqueries", queries);
 
       apiEndpointToFetch();
     }
     else {
 
-      res.send(yelpData);
+     // res.send(yelpData);
+      return yelpData
     }
 
 
@@ -68,7 +70,8 @@ app.post('/api/yelp', (req, res) => {
         apiRequest(urlPhone, request),
 
       ).then((response) => {
-        return response.json()
+       let json = response.json();
+        return json;
       })
         .then((data) => {
           let yelp = {
@@ -156,27 +159,40 @@ app.post('/api/yelp', (req, res) => {
 
   }
 
-  const yelphData = []
-  iterateApiCalls(req.body.data, 0, yelphData);
+ // const yelpData = await
+  // iterateApiCalls(req.body.data, 0, [])
 
-  async function apiRequest(endpoint, request){
-    const response = await fetch(endpoint, {
-      ...request,
-      //  headers: { ...request.headers, 'Content-Type': 'application/json'}
-    });
+  const yelpData = await yelpApi(req.body.data, displayLimit, res);
+  // const yelpDataS = await yelpData
+ console.log('yelpDatayelpData', yelpData);
+  res.send(yelpData);
+  function cb(yelpDataS){
+    res.send(yelpDataS);
+  }
+ // const getYelpData = yelpApi(req.body.data, displayLimit, res)
 
-    if (response.status < 200 || response.status >= 300) {
-      const error = new Error(response.statusText);
-      error.response = response;
-      error.status = response.status;
-      throw error;
-    }
+  // const getYelpData = yelpApi(req.body.data, displayLimit)
+  // const yelpData = await getYelpData();
+  // console.log('yelpDatayelpData', yelpData);
+  // res.send(yelpData);
+});
 
-    return response;
+
+async function apiRequest(endpoint, request) {
+  const response = await fetch(endpoint, {
+    ...request,
+    //  headers: { ...request.headers, 'Content-Type': 'application/json'}
+  });
+
+  if (response.status < 200 || response.status >= 300) {
+    const error = new Error(response.statusText);
+    error.response = response;
+    error.status = response.status;
+    throw error;
   }
 
-  
-});
+  return response;
+}
 
 
 app.get('/api/hello', (req, res) => {
