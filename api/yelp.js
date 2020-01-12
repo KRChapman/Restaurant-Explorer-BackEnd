@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-////
+
 const yelpApi =  function  (queries, displayLimit, cb){
 
   const yelpData = [];
