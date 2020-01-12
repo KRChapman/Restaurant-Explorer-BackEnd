@@ -21,10 +21,11 @@ app.get('/', (req, res) => {
  
 });
 
-app.post('/api/yelp', async (req, res) => {
+app.post('/api', async (req, res) => {
   const displayLimit = req.body.displayLimit;
-  const yelpData = await yelpApi(req.body.data, displayLimit, res);
- 
+  console.log('datadatayelpDatayelpData', req.body);
+  const yelpData = await yelpApi(req.body.yelp.data, displayLimit, res);
+  
   res.send(yelpData);
 });
 

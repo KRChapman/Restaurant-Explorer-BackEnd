@@ -8,7 +8,7 @@ const yelpApi =  function  (queries, displayLimit, cb){
   return new Promise(function (resolve, reject) {
     iterateApiCalls(queries, index, yelpData);
     function iterateApiCalls(queries, index, yelpData)  {
-
+     
       // SAME PHONE NUMBER ONE IS CLOSED !!!
       // maybe iterate find not closed one then maybe algo that finds closes name based on query
       // yelp:
@@ -26,7 +26,7 @@ const yelpApi =  function  (queries, displayLimit, cb){
           headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
         }
         const apiEndpointToFetch = queries[i].phoneNumber != null ? yelpPhone : yelpBusiness;
-
+       
         apiEndpointToFetch();
       }
       else {
