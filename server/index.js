@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { yelpApi} = require('./../api/yelp');
+const { yelpApi} = require('../api');
 const app = express();
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
