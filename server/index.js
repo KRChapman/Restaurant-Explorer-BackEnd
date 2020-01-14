@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { yelpApi} = require('../api');
+const { yelpApi, healthApi} = require('../api');
 const app = express();
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -23,9 +23,9 @@ app.get('/', (req, res) => {
 
 app.post('/api', async (req, res) => {
   const displayLimit = req.body.displayLimit;
-  console.log('datadatayelpDatayelpData', req.body);
-  const yelpData = await yelpApi(req.body.yelp.data, displayLimit, res);
   
+  const yelpData = await yelpApi(req.body.yelp.data, displayLimit);
+
   res.send(yelpData);
 });
 

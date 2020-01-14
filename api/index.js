@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const yelpApi =  function  (queries, displayLimit, cb){
+const yelpApi =  function  (queries, displayLimit){
 
   const yelpData = [];
   let index = 0;
@@ -115,8 +115,9 @@ const yelpApi =  function  (queries, displayLimit, cb){
 
 
 
-const healthApi = function(){
-  return null;
+const healthApi = function (queries, displayLimit){
+ return null;
+  
 }
 
 module.exports = { yelpApi, healthApi}
