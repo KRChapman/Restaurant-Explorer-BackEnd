@@ -116,7 +116,39 @@ const yelpApi =  function  (queries, displayLimit){
 
 
 const healthApi = function (queries, displayLimit){
- return null;
+  const healthData = [];
+
+  return new Promise((resolve, reject) => {
+    iterateApiCalls(queries, 0, healthData);
+    function iterateApiCalls(queries, i, healthData) {
+
+    
+      if (i < displayLimit) {
+        const url = queries[i].health.url;
+        const request = queries[i].health.request;
+ 
+        Promise.resolve(
+          apiRequest(url, request)
+        ).then((response) => {
+          return response.json()
+        }).then((data) => {
+          healthData.push(data);
+          iterateApiCalls(queries, i + 1, healthData);
+        }).catch(e => {
+          let health = { name: null }
+          healthData.push(health);
+          iterateApiCalls(queries, i + 1, healthData);
+
+        })
+      }
+      else {
+        resolve(healthData);
+      }
+
+    }
+
+
+  })
   
 }
 
