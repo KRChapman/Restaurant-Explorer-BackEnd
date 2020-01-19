@@ -7,19 +7,9 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
 app.use(bodyParser.json())
-
 const port = process.env.PORT || 5000;
-
-app.get('/', (req, res) => {
- 
-  res.send('hi')
- 
-});
 
 app.post('/api', async (req, res) => {
   const displayLimit = req.body.displayLimit;
@@ -28,7 +18,5 @@ app.post('/api', async (req, res) => {
   const healthData = await healthApi(req.body.health,displayLimit);
   res.send({ yelpData, healthData});
 });
-
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

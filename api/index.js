@@ -1,13 +1,12 @@
 const fetch = require('node-fetch');
 
 const yelpApi =  function  (queries, displayLimit){
-
   const yelpData = [];
   let index = 0;
 
   return new Promise(function (resolve, reject) {
     iterateApiCalls(queries, index, yelpData);
-    function iterateApiCalls(queries, index, yelpData)  {
+    function iterateApiCalls(queries, i, yelpData)  {
      
       // SAME PHONE NUMBER ONE IS CLOSED !!!
       // maybe iterate find not closed one then maybe algo that finds closes name based on query
@@ -16,24 +15,22 @@ const yelpApi =  function  (queries, displayLimit){
       // 0: { id: "SQKRGzDa7qd8qHb13Z2-Hg", alias: "delinomore-seattle", name: "DeliNoMore", image_url: "https://s3-media0.fl.yelpcdn.com/bphoto/H1p6njRYuEULDluuwEbiNw/o.jpg", is_closed: false, … }
       // 1: { id: "rkiqLiA9mvM-5ULFxx6TUg", alias: "nickos-seattle", name: "Nicko's", image_url: "https://s3-media0.fl.yelpcdn.com/bphoto/VXmkdiYR_zmdBDwVB3F7Gg/o.jpg", is_closed: true, … }
 
-      if (index < displayLimit) {//NEED TO pass from display limit in LAYOUT COMPONENT!!!
-        var i = index;
+      if (i < displayLimit) {
+        const { placeId } = queries[i];
         var urlBusinesses = `https://api.yelp.com/v3/businesses/matches?name=${queries[i].name}&address1=${queries[i].address}&city=${queries[i].city}&state=${queries[i].state}&country=${queries[i].country}`;
         var urlPhone = `https://api.yelp.com/v3/businesses/search/phone?phone=${queries[i].phoneNumber}`;
-        var urlMatch;
         var request = {
           method: 'GET',
           headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
         }
         const apiEndpointToFetch = queries[i].phoneNumber != null ? yelpPhone : yelpBusiness;
-       
-        apiEndpointToFetch();
+        apiEndpointToFetch(placeId);
       }
       else {
         resolve(yelpData)
       }
 
-      function yelpPhone() {
+      function yelpPhone(placeId) {
         request.url = urlPhone
         Promise.resolve(
           apiRequest(urlPhone, request),
@@ -43,10 +40,11 @@ const yelpApi =  function  (queries, displayLimit){
         })
           .then((data) => {
             let yelp = {
+              placeId,
               yelp: data
             }
             if (data.businesses.length <= 0) {
-              yelpBusiness();
+              yelpBusiness(placeId);
             }
             else {
               index = index + 1;
@@ -55,11 +53,11 @@ const yelpApi =  function  (queries, displayLimit){
             }
           }).catch(e => {
             //console.log('yelpPhone', e);
-            yelpBusiness()
+            yelpBusiness(placeId)
           })
       }
 
-      function yelpBusiness() {
+      function yelpBusiness(placeId) {
         request.url = urlBusinesses
         Promise.resolve(
           apiRequest(urlBusinesses, request)
@@ -68,7 +66,7 @@ const yelpApi =  function  (queries, displayLimit){
         })
           .then((data) => {
             dataId = data.businesses[0].id
-            yelpDetails(dataId)
+            yelpDetails(dataId, placeId )
           }).catch(e => {
            // console.log('yelpBusiness', e);
             let yelp = {
@@ -80,18 +78,18 @@ const yelpApi =  function  (queries, displayLimit){
           })
       }
 
-      function yelpDetails(id) {
+      function yelpDetails(id, placeId ) {
         const urlDetails = `https://api.yelp.com/v3/businesses/${id}`
 
         request.url = urlDetails
         Promise.resolve(
           apiRequest(urlDetails, request)
-
         ).then((response) => {
           return response.json()
         })
           .then((data) => {
             let yelp = {
+              placeId,
               yelp: data
             }
             yelpData.push(yelp);
@@ -109,11 +107,7 @@ const yelpApi =  function  (queries, displayLimit){
       }
     }
   })
-
-
 }
-
-
 
 const healthApi = function (queries, displayLimit){
   const healthData = [];
@@ -121,8 +115,6 @@ const healthApi = function (queries, displayLimit){
   return new Promise((resolve, reject) => {
     iterateApiCalls(queries, 0, healthData);
     function iterateApiCalls(queries, i, healthData) {
-
-    
       if (i < displayLimit) {
         const url = queries[i].health.url;
         const request = queries[i].health.request;
@@ -138,25 +130,14 @@ const healthApi = function (queries, displayLimit){
           let health = { name: null }
           healthData.push(health);
           iterateApiCalls(queries, i + 1, healthData);
-
         })
       }
       else {
         resolve(healthData);
       }
-
     }
-
-
   })
-  
 }
-
-module.exports = { yelpApi, healthApi}
-
-
-
-
 
 async function apiRequest(endpoint, request) {
   const response = await fetch(endpoint, {
@@ -170,6 +151,8 @@ async function apiRequest(endpoint, request) {
     error.status = response.status;
     throw error;
   }
-
   return response;
 }
+
+
+module.exports = { yelpApi, healthApi }
