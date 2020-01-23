@@ -116,6 +116,7 @@ const healthApi = function (queries, displayLimit){
     iterateApiCalls(queries, 0, healthData);
     function iterateApiCalls(queries, i, healthData) {
       if (i < displayLimit) {
+        const { placeId } = queries[i].health;
         const url = queries[i].health.url;
         const request = queries[i].health.request;
  
@@ -124,7 +125,11 @@ const healthApi = function (queries, displayLimit){
         ).then((response) => {
           return response.json()
         }).then((data) => {
-          healthData.push(data);
+          const health = {
+            placeId,
+            data
+          }
+          healthData.push(health);
           iterateApiCalls(queries, i + 1, healthData);
         }).catch(e => {
           let health = { name: null }
