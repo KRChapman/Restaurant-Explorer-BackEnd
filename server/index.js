@@ -13,7 +13,6 @@ const port = process.env.PORT || 5000;
 
 app.post('/api', async (req, res) => {
   const displayLimit = req.body.displayLimit;
-
   const yelpData = await yelpApi(req.body.yelp.data, displayLimit);
   const healthData = await healthApi(req.body.health,displayLimit);
   res.send({ yelpData, healthData});

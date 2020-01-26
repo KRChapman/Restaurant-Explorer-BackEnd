@@ -8,7 +8,7 @@ const yelpApi =  function  (queries, displayLimit){
     iterateApiCalls(queries, index, yelpData);
     function iterateApiCalls(queries, i, yelpData)  {
      
-      // SAME PHONE NUMBER ONE IS CLOSED !!!
+      // SAME PHONE NUMBER ONE IS CLOSED !!! // INSteAD OF data.businesses[0] 
       // maybe iterate find not closed one then maybe algo that finds closes name based on query
       // yelp:
       // businesses: Array(2)
@@ -41,7 +41,7 @@ const yelpApi =  function  (queries, displayLimit){
           .then((data) => {
             let yelp = {
               placeId,
-              yelp: data
+              yelp:  data.businesses[0]
             }
             if (data.businesses.length <= 0) {
               yelpBusiness(placeId);
@@ -52,7 +52,7 @@ const yelpApi =  function  (queries, displayLimit){
               iterateApiCalls(queries, index, yelpData)
             }
           }).catch(e => {
-            //console.log('yelpPhone', e);
+            // console.log('yelpPhone', e);
             yelpBusiness(placeId)
           })
       }
@@ -65,12 +65,24 @@ const yelpApi =  function  (queries, displayLimit){
           return response.json()
         })
           .then((data) => {
-            dataId = data.businesses[0].id
-            yelpDetails(dataId, placeId )
+            if (data.businesses.length <= 0) {
+              let yelp = {
+                placeId,
+                yelp: {}
+              }
+              index = index + 1;
+              yelpData.push(yelp);
+              iterateApiCalls(queries, index, yelpData)
+            }
+            else{
+              dataId = data.businesses[0].id
+              yelpDetails(dataId, placeId)
+            }
           }).catch(e => {
-           // console.log('yelpBusiness', e);
+          // console.log('yelpBusiness', e);
             let yelp = {
-              yelp: null
+              placeId,
+              yelp: {}
             }
             index = index + 1;
             yelpData.push(yelp);
@@ -98,7 +110,8 @@ const yelpApi =  function  (queries, displayLimit){
           }).catch(e => {
             //console.log('yelpDetails', e);
             let yelp = {
-              yelp: null
+              placeId,
+              yelp: []
             }
             index = index + 1;
             yelpData.push(yelp);
@@ -132,7 +145,7 @@ const healthApi = function (queries, displayLimit){
           healthData.push(health);
           iterateApiCalls(queries, i + 1, healthData);
         }).catch(e => {
-          let health = { name: null }
+          let health = { placeId, data: [] }
           healthData.push(health);
           iterateApiCalls(queries, i + 1, healthData);
         })
