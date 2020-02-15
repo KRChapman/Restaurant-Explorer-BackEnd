@@ -172,5 +172,4 @@ async function apiRequest(endpoint, request) {
   return response;
 }
 
-
 module.exports = { yelpApi, healthApi }
