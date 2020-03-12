@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { yelpApi, healthApi} = require('../api');
+const { yelpApi, healthApi, yelpReviewApi} = require('../api');
 const app = express();
 
 app.use(function (req, res, next) {
@@ -18,6 +18,13 @@ app.post('/api', async (req, res) => {
   const yelpData = await yelpApi(req.body.yelp.data, displayLimit);
   const healthData = await healthApi(req.body.health,displayLimit);
   res.send({ yelpData, healthData});
+});
+
+app.post('/api/yelp-review', async (req, res) => {
+  const yelpId = req.body.yelpId
+  const yelpData = await yelpReviewApi(yelpId);
+  //debugger;
+  res.send({ yelpData});
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -157,6 +157,21 @@ const healthApi = function (queries, displayLimit){
   })
 }
 
+const yelpReviewApi = async (yelpId)=> {
+  const endpoint = `https://api.yelp.com/v3/businesses/${yelpId}/reviews`;
+  const request = {
+    method: 'GET',
+    headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
+  }
+ 
+  try {
+   var reviewData =  await apiRequest(endpoint, request);
+  } catch (error) {
+    console.log('erroryelpReviewApi', error);
+  }
+  return  await reviewData.json();
+}
+
 async function apiRequest(endpoint, request) {
   const response = await fetch(endpoint, {
     ...request,
@@ -172,4 +187,4 @@ async function apiRequest(endpoint, request) {
   return response;
 }
 
-module.exports = { yelpApi, healthApi }
+module.exports = { yelpApi, healthApi, yelpReviewApi }
