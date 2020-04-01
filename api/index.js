@@ -19,9 +19,10 @@ const yelpApi =  function  (queries, displayLimit){
         const { placeId } = queries[i];
         var urlBusinesses = `https://api.yelp.com/v3/businesses/matches?name=${queries[i].name}&address1=${queries[i].address}&city=${queries[i].city}&state=${queries[i].state}&country=${queries[i].country}`;
         var urlPhone = `https://api.yelp.com/v3/businesses/search/phone?phone=${queries[i].phoneNumber}`;
+        const yelpKey = process.env.API_YELP
         var request = {
           method: 'GET',
-          headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
+          headers: { "Authorization": `Bearer ${yelpKey}` }
         }
         const apiEndpointToFetch = queries[i].phoneNumber != null ? yelpPhone : yelpBusiness;
         apiEndpointToFetch(placeId);
@@ -131,8 +132,14 @@ const healthApi = function (queries, displayLimit){
       if (i < displayLimit) {
         const { placeId } = queries[i].health;
         const url = queries[i].health.url;
-        const request = queries[i].health.request;
- 
+        const healthToken = process.env.API_HEALTH;
+        const request = {
+          method: "GET",
+          params: {
+            "$limit": 2,
+            "$$app_token": `${healthToken}`
+          }
+        }
         Promise.resolve(
           apiRequest(url, request)
         ).then((response) => {
@@ -159,9 +166,11 @@ const healthApi = function (queries, displayLimit){
 
 const yelpReviewApi = async (yelpId)=> {
   const endpoint = `https://api.yelp.com/v3/businesses/${yelpId}/reviews`;
+  const yelpKey = process.env.API_YELP; 
+  console.log("yelpKey", yelpKey );
   const request = {
     method: 'GET',
-    headers: { "Authorization": "Bearer gqw4k3JJGYyUVrE5fvmaOBd9YerLDsSJxXtBykLWy3U1226XfsGL4gDIq0ARBRsoiuJGN66bEh0ozpxleHGcC3rB8uncvLSg8r0gVCaw8rYDrBXr3PaSaVF1MNnPW3Yx" }
+    headers: { "Authorization": `Bearer ${yelpKey}` }
   }
  
   try {

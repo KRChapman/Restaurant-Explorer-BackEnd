@@ -1,7 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { yelpApi, healthApi, yelpReviewApi} = require('../api');
+const dotenv = require('dotenv');
+var path = require('path');
 const app = express();
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.resolve(__dirname, `./../.env.development.local`) });
+}
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
