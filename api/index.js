@@ -167,7 +167,7 @@ const healthApi = function (queries, displayLimit){
 const yelpReviewApi = async (yelpId)=> {
   const endpoint = `https://api.yelp.com/v3/businesses/${yelpId}/reviews`;
   const yelpKey = process.env.API_YELP; 
-  console.log("yelpKey", yelpKey );
+
   const request = {
     method: 'GET',
     headers: { "Authorization": `Bearer ${yelpKey}` }
