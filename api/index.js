@@ -18,7 +18,9 @@ const yelpApi =  function  (queries, displayLimit){
       if (i < displayLimit) {
         const { placeId } = queries[i];
         var urlBusinesses = `https://api.yelp.com/v3/businesses/matches?name=${queries[i].name}&address1=${queries[i].address}&city=${queries[i].city}&state=${queries[i].state}&country=${queries[i].country}`;
-        var urlPhone = `https://api.yelp.com/v3/businesses/search/phone?phone=${queries[i].phoneNumber}`;
+       
+        var urlPhone =   `https://api.yelp.com/v3/businesses/search/phone?phone=${queries[i].phoneNumber}`;
+       
         const yelpKey = process.env.API_YELP
         var request = {
           method: 'GET',

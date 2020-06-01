@@ -22,8 +22,21 @@ app.post('/api', async (req, res) => {
   const displayLimit = req.body.displayLimit;
 
   // NEED TRY CATCH
-  const yelpData = await yelpApi(req.body.yelp.data, displayLimit);
-  const healthData = await healthApi(req.body.health,displayLimit);
+  let yelpData= [];
+  let healthData = [];
+  try {
+    yelpData  = await yelpApi(req.body.yelp.data, displayLimit);
+  } catch (error) {
+    console.log(error)
+  }
+
+  try {
+    healthData  = await healthApi(req.body.health, displayLimit);
+  } catch (error) {
+    console.log(error)
+  }
+  
+  
   res.send({ yelpData, healthData});
 });
 
@@ -31,8 +44,13 @@ app.post('/api', async (req, res) => {
 
 app.post('/api/yelp-review', async (req, res) => {
   const yelpId = req.body.yelpId
-  const yelpData = await yelpReviewApi(yelpId);
-  console.log('hi');
+  try {
+    var yelpData = await yelpReviewApi(yelpId);
+  } catch (error) {
+    console.log(error);
+  }
+ 
+ 
   res.send({ yelpData});
 });
 
